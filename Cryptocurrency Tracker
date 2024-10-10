@@ -1,0 +1,69 @@
+pip install requests
+import tkinter as tk
+from tkinter import messagebox
+import requests
+import time
+import threading
+
+# Function to fetch cryptocurrency prices
+def fetch_prices():
+    url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,litecoin&vs_currencies=usd"
+    try:
+        response = requests.get(url)
+        data = response.json()
+        return {
+            "Bitcoin": data['bitcoin']['usd'],
+            "Ethereum": data['ethereum']['usd'],
+            "Litecoin": data['litecoin']['usd']
+        }
+    except Exception as e:
+        print("Error fetching prices:", e)
+        return {}
+
+# Function to update price labels
+def update_prices():
+    while True:
+        prices = fetch_prices()
+        if prices:
+            bitcoin_price_var.set(f"Bitcoin: ${prices['Bitcoin']}")
+            ethereum_price_var.set(f"Ethereum: ${prices['Ethereum']}")
+            litecoin_price_var.set(f"Litecoin: ${prices['Litecoin']}")
+        time.sleep(10)  # Update every 10 seconds
+
+# Function to check price alerts
+def check_alerts():
+    while True:
+        prices = fetch_prices()
+        if prices:
+            for coin, threshold in alerts.items():
+                if prices[coin] >= threshold:
+                    messagebox.showinfo("Price Alert", f"{coin} has reached ${prices[coin]}!")
+        time.sleep(60)  # Check alerts every minute
+
+# GUI Setup
+root = tk.Tk()
+root.title("Cryptocurrency Tracker")
+
+# Variables to hold price information
+bitcoin_price_var = tk.StringVar()
+ethereum_price_var = tk.StringVar()
+litecoin_price_var = tk.StringVar()
+
+# Layout
+tk.Label(root, textvariable=bitcoin_price_var, font=("Helvetica", 16)).pack(pady=10)
+tk.Label(root, textvariable=ethereum_price_var, font=("Helvetica", 16)).pack(pady=10)
+tk.Label(root, textvariable=litecoin_price_var, font=("Helvetica", 16)).pack(pady=10)
+
+# Alerts Dictionary
+alerts = {
+    "Bitcoin": 60000,  # Set your alert thresholds here
+    "Ethereum": 4000,
+    "Litecoin": 300
+}
+
+# Start threads for updating prices and checking alerts
+threading.Thread(target=update_prices, daemon=True).start()
+threading.Thread(target=check_alerts, daemon=True).start()
+
+# Start the GUI event loop
+root.mainloop()
