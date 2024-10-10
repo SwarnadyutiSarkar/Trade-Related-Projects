@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Comparison Tool</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        input { margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+
+<h1>Loan Comparison Tool</h1>
+
+<form method="POST">
+    <label for="number_of_loans">Number of Loans:</label>
+    <input type="number" id="number_of_loans" name="number_of_loans" min="1" max="5" required>
+    <button type="submit">Add Loans</button>
+</form>
+
+{% if loans is not none %}
+    <form method="POST">
+        <h2>Enter Loan Details</h2>
+        {% for i in range(loans|length) %}
+            <h3>Loan {{ loop.index }}</h3>
+            <label for="principal_{{ i }}">Principal:</label>
+            <input type="number" id="principal_{{ i }}" name="principal_{{ i }}" required>
+            <label for="rate_{{ i }}">Interest Rate (%):</label>
+            <input type="number" id="rate_{{ i }}" name="rate_{{ i }}" step="0.01" required>
+            <label for="years_{{ i }}">Term (years):</label>
+            <input type="number" id="years_{{ i }}" name="years_{{ i }}" required>
+        {% endfor %}
+        <button type="submit">Calculate Total Costs</button>
+    </form>
+
+    {% if loans %}
+        <h2>Loan Comparison Results</h2>
+        <table>
+            <tr>
+                <th>Principal</th>
+                <th>Interest Rate (%)</th>
+                <th>Term (years)</th>
+                <th>Total Cost</th>
+            </tr>
+            {% for loan in loans %}
+                <tr>
+                    <td>${{ loan.principal }}</td>
+                    <td>{{ loan.rate }}%</td>
+                    <td>{{ loan.years }}</td>
+                    <td>${{ loan.total_cost | round(2) }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endif %}
+
+</body>
+</html>
