@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economic Data Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        canvas { max-width: 600px; margin: 20px auto; }
+        .container { display: flex; justify-content: space-around; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<h1>Economic Data Dashboard</h1>
+
+<div class="container">
+    <div>
+        <h2>GDP Growth Rate (%)</h2>
+        <canvas id="gdpChart"></canvas>
+    </div>
+    <div>
+        <h2>Unemployment Rate (%)</h2>
+        <canvas id="unemploymentChart"></canvas>
+    </div>
+</div>
+
+<script>
+const gdpData = [2.5, 3.0, 2.8, 2.2, 3.1, 2.9]; // Sample GDP data
+const unemploymentData = [5.0, 4.8, 4.6, 4.9, 5.1, 5.3]; // Sample Unemployment data
+const labels = ['2018', '2019', '2020', '2021', '2022', '2023']; // Sample years
+
+const gdpCtx = document.getElementById('gdpChart').getContext('2d');
+const unemploymentCtx = document.getElementById('unemploymentChart').getContext('2d');
+
+const gdpChart = new Chart(gdpCtx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'GDP Growth Rate',
+            data: gdpData,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            fill: true,
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Growth Rate (%)'
+                }
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Year'
+                }
+            }
+        }
+    }
+});
+
+const unemploymentChart = new Chart(unemploymentCtx, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Unemployment Rate',
+            data: unemploymentData,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Unemployment Rate (%)'
+                }
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Year'
+                }
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>
