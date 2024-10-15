@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirement Planning Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        label, input { display: block; margin: 10px 0; }
+        #result { margin-top: 20px; }
+        button { padding: 10px 15px; }
+    </style>
+</head>
+<body>
+
+<h1>Retirement Planning Calculator</h1>
+
+<label for="currentSavings">Current Savings ($):</label>
+<input type="number" id="currentSavings" required>
+
+<label for="desiredRetirementAge">Desired Retirement Age:</label>
+<input type="number" id="desiredRetirementAge" required>
+
+<label for="currentAge">Current Age:</label>
+<input type="number" id="currentAge" required>
+
+<label for="annualExpenses">Annual Expenses in Retirement ($):</label>
+<input type="number" id="annualExpenses" required>
+
+<label for="expectedReturn">Expected Annual Return Rate (%):</label>
+<input type="number" id="expectedReturn" step="0.01" required>
+
+<button id="calculate">Calculate Savings Needed</button>
+
+<div id="result" style="display: none;">
+    <h2>Results</h2>
+    <p id="savingsNeeded"></p>
+</div>
+
+<script>
+document.getElementById('calculate').addEventListener('click', function() {
+    const currentSavings = parseFloat(document.getElementById('currentSavings').value);
+    const desiredRetirementAge = parseInt(document.getElementById('desiredRetirementAge').value);
+    const currentAge = parseInt(document.getElementById('currentAge').value);
+    const annualExpenses = parseFloat(document.getElementById('annualExpenses').value);
+    const expectedReturn = parseFloat(document.getElementById('expectedReturn').value) / 100;
+
+    if (isNaN(currentSavings) || isNaN(desiredRetirementAge) || isNaN(currentAge) || isNaN(annualExpenses) || isNaN(expectedReturn)) {
+        alert("Please enter valid values.");
+        return;
+    }
+
+    const yearsToRetirement = desiredRetirementAge - currentAge;
+    const totalAmountNeeded = annualExpenses * (1 - Math.pow(1 + expectedReturn, -20)) / expectedReturn; // Simplified 20-year retirement
+    const savingsNeeded = totalAmountNeeded - currentSavings * Math.pow(1 + expectedReturn, yearsToRetirement);
+
+    document.getElementById('savingsNeeded').innerText = `You need to save approximately $${savingsNeeded.toFixed(2)} more for retirement.`;
+    document.getElementById('result').style.display = 'block';
+});
+</script>
+
+</body>
+</html>
