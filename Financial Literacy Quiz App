@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Literacy Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #quiz-container { display: none; }
+        .question { margin: 20px 0; }
+        .result { margin-top: 20px; }
+        button { padding: 10px 15px; }
+    </style>
+</head>
+<body>
+
+<h1>Financial Literacy Quiz</h1>
+<div id="start-container">
+    <button id="start-quiz">Start Quiz</button>
+</div>
+
+<div id="quiz-container">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+    <button id="next">Next Question</button>
+    <div class="result" id="result" style="display: none;"></div>
+</div>
+
+<script>
+const quizQuestions = [
+    {
+        question: "What does GDP stand for?",
+        options: ["Gross Domestic Product", "General Domestic Product", "Gross Development Plan", "General Development Plan"],
+        answer: 0
+    },
+    {
+        question: "What is the primary purpose of a budget?",
+        options: ["To track spending", "To increase debt", "To save for retirement", "To impress friends"],
+        answer: 0
+    },
+    {
+        question: "What is an emergency fund?",
+        options: ["A fund for luxury purchases", "Savings for unexpected expenses", "A type of investment", "None of the above"],
+        answer: 1
+    },
+    {
+        question: "What is compound interest?",
+        options: ["Interest on the initial principal only", "Interest on the principal plus accumulated interest", "A fee for borrowing money", "None of the above"],
+        answer: 1
+    },
+    {
+        question: "What does it mean to diversify investments?",
+        options: ["Investing in multiple asset types", "Putting all money in one stock", "Only investing in bonds", "None of the above"],
+        answer: 0
+    }
+];
+
+let currentQuestionIndex = 0;
+let score = 0;
+
+document.getElementById('start-quiz').addEventListener('click', function() {
+    document.getElementById('start-container').style.display = 'none';
+    document.getElementById('quiz-container').style.display = 'block';
+    loadQuestion();
+});
+
+document.getElementById('next').addEventListener('click', function() {
+    const selectedOption = document.querySelector('input[name="option"]:checked');
+    if (selectedOption) {
+        const answerIndex = parseInt(selectedOption.value);
+        if (answerIndex === quizQuestions[currentQuestionIndex].answer) {
+            score++;
+        }
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizQuestions.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    } else {
+        alert("Please select an answer.");
+    }
+});
+
+function loadQuestion() {
+    const questionData = quizQuestions[currentQuestionIndex];
+    document.getElementById('question').innerText = questionData.question;
+    const optionsHtml = questionData.options.map((option, index) => `
+        <div>
+            <input type="radio" name="option" value="${index}" id="option${index}">
+            <label for="option${index}">${option}</label>
+        </div>
+    `).join('');
+    document.getElementById('options').innerHTML = optionsHtml;
+}
+
+function showResult() {
+    document.getElementById('quiz-container').style.display = 'none';
+    const resultMessage = `You scored ${score} out of ${quizQuestions.length}.`;
+    document.getElementById('result').innerText = resultMessage;
+    document.getElementById('result').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
