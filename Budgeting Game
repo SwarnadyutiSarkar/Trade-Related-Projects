@@ -1,0 +1,118 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <iomanip>
+
+using namespace std;
+
+class Expense {
+public:
+    string name;
+    double amount;
+
+    Expense(string n, double a) : name(n), amount(a) {}
+};
+
+class BudgetingGame {
+private:
+    double budget;
+    double savingsGoal;
+    vector<Expense> expenses;
+
+public:
+    BudgetingGame(double initialBudget, double goal) 
+        : budget(initialBudget), savingsGoal(goal) {}
+
+    void displayBudget() {
+        cout << fixed << setprecision(2);
+        cout << "Current Budget: $" << budget << endl;
+        cout << "Savings Goal: $" << savingsGoal << endl;
+    }
+
+    void addExpense() {
+        string name;
+        double amount;
+
+        cout << "Enter the name of the expense: ";
+        cin >> name;
+        cout << "Enter the amount: $";
+        cin >> amount;
+
+        if (amount > budget) {
+            cout << "You cannot afford this expense!" << endl;
+        } else {
+            budget -= amount;
+            expenses.push_back(Expense(name, amount));
+            cout << "Expense added successfully!" << endl;
+        }
+    }
+
+    void showExpenses() {
+        cout << "Expenses:" << endl;
+        for (const auto& expense : expenses) {
+            cout << expense.name << ": $" << expense.amount << endl;
+        }
+    }
+
+    void checkGoal() {
+        double totalExpenses = 0;
+        for (const auto& expense : expenses) {
+            totalExpenses += expense.amount;
+        }
+
+        if (budget + totalExpenses >= savingsGoal) {
+            cout << "Congratulations! You've reached your savings goal!" << endl;
+        } else {
+            cout << "You still need $" << (savingsGoal - (budget + totalExpenses)) << " to reach your goal." << endl;
+        }
+    }
+
+    void play() {
+        int choice;
+        while (true) {
+            cout << "\nBudgeting Game Menu:" << endl;
+            cout << "1. Display Budget" << endl;
+            cout << "2. Add Expense" << endl;
+            cout << "3. Show Expenses" << endl;
+            cout << "4. Check Savings Goal" << endl;
+            cout << "5. Exit" << endl;
+            cout << "Choose an option: ";
+            cin >> choice;
+
+            switch (choice) {
+                case 1:
+                    displayBudget();
+                    break;
+                case 2:
+                    addExpense();
+                    break;
+                case 3:
+                    showExpenses();
+                    break;
+                case 4:
+                    checkGoal();
+                    break;
+                case 5:
+                    cout << "Thank you for playing!" << endl;
+                    return;
+                default:
+                    cout << "Invalid choice. Please try again." << endl;
+            }
+        }
+    }
+};
+
+int main() {
+    double initialBudget, savingsGoal;
+
+    cout << "Welcome to the Budgeting Game!" << endl;
+    cout << "Enter your initial budget: $";
+    cin >> initialBudget;
+    cout << "Enter your savings goal: $";
+    cin >> savingsGoal;
+
+    BudgetingGame game(initialBudget, savingsGoal);
+    game.play();
+
+    return 0;
+}
