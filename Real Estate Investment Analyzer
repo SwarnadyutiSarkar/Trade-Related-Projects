@@ -1,0 +1,116 @@
+#include <iostream>
+#include <vector>
+#include <iomanip>
+#include <string>
+
+using namespace std;
+
+class Property {
+public:
+    string name;
+    double purchasePrice;
+    double rentalIncome;
+    double operatingExpenses;
+    double propertyValue;
+    double appreciationRate; // as a percentage
+
+    Property(string n, double pp, double ri, double oe, double pv, double ar)
+        : name(n), purchasePrice(pp), rentalIncome(ri), operatingExpenses(oe),
+          propertyValue(pv), appreciationRate(ar) {}
+
+    double calculateCashFlow() {
+        return rentalIncome - operatingExpenses;
+    }
+
+    double calculateROI() {
+        double cashFlow = calculateCashFlow();
+        return (cashFlow * 12 / purchasePrice) * 100; // Annualized ROI
+    }
+
+    double calculateFutureValue(int years) {
+        return propertyValue * pow(1 + (appreciationRate / 100), years);
+    }
+};
+
+class InvestmentAnalyzer {
+private:
+    vector<Property> properties;
+
+public:
+    void addProperty() {
+        string name;
+        double purchasePrice, rentalIncome, operatingExpenses, propertyValue, appreciationRate;
+
+        cout << "Enter property name: ";
+        cin >> name;
+        cout << "Enter purchase price: $";
+        cin >> purchasePrice;
+        cout << "Enter monthly rental income: $";
+        cin >> rentalIncome;
+        cout << "Enter monthly operating expenses: $";
+        cin >> operatingExpenses;
+        cout << "Enter current property value: $";
+        cin >> propertyValue;
+        cout << "Enter annual appreciation rate (in %): ";
+        cin >> appreciationRate;
+
+        properties.push_back(Property(name, purchasePrice, rentalIncome, operatingExpenses, propertyValue, appreciationRate));
+        cout << "Property added successfully!" << endl;
+    }
+
+    void analyzeProperties() {
+        for (const auto& property : properties) {
+            cout << "\nProperty Name: " << property.name << endl;
+            cout << "Monthly Cash Flow: $" << fixed << setprecision(2) << property.calculateCashFlow() << endl;
+            cout << "Annual ROI: " << fixed << setprecision(2) << property.calculateROI() << "%" << endl;
+        }
+    }
+
+    void projectFutureValue() {
+        int years;
+        cout << "Enter number of years for projection: ";
+        cin >> years;
+
+        for (const auto& property : properties) {
+            cout << "\nProperty Name: " << property.name << endl;
+            cout << "Future Value in " << years << " years: $"
+                 << fixed << setprecision(2) << property.calculateFutureValue(years) << endl;
+        }
+    }
+
+    void showMenu() {
+        int choice;
+        while (true) {
+            cout << "\nInvestment Analyzer Menu:" << endl;
+            cout << "1. Add Property" << endl;
+            cout << "2. Analyze Properties" << endl;
+            cout << "3. Project Future Value" << endl;
+            cout << "4. Exit" << endl;
+            cout << "Choose an option: ";
+            cin >> choice;
+
+            switch (choice) {
+                case 1:
+                    addProperty();
+                    break;
+                case 2:
+                    analyzeProperties();
+                    break;
+                case 3:
+                    projectFutureValue();
+                    break;
+                case 4:
+                    cout << "Exiting the program. Thank you!" << endl;
+                    return;
+                default:
+                    cout << "Invalid choice. Please try again." << endl;
+            }
+        }
+    }
+};
+
+int main() {
+    InvestmentAnalyzer analyzer;
+    analyzer.showMenu();
+    return 0;
+}
