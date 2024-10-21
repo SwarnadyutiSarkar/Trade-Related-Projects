@@ -1,0 +1,53 @@
+import random
+
+class Economy:
+    def __init__(self):
+        self.resources = {
+            "money": 1000,
+            "food": 500,
+            "health": 100
+        }
+        self.policy_effects = {
+            "tax_increase": {"money": -100, "food": 0, "health": 0},
+            "tax_decrease": {"money": 100, "food": 0, "health": 0},
+            "subsidize_food": {"money": -50, "food": 100, "health": 0},
+            "invest_health": {"money": -200, "food": 0, "health": 50}
+        }
+        self.turns = 0
+
+    def display_status(self):
+        print(f"Turn: {self.turns}")
+        print("Resources:", self.resources)
+
+    def make_policy_decision(self, policy):
+        if policy in self.policy_effects:
+            for resource, change in self.policy_effects[policy].items():
+                self.resources[resource] += change
+                if self.resources[resource] < 0:
+                    self.resources[resource] = 0
+            self.evaluate_economy()
+        else:
+            print("Invalid policy decision.")
+
+    def evaluate_economy(self):
+        # Simple economic effect simulation
+        self.resources["food"] += random.randint(-20, 50)  # Random food growth
+        self.resources["health"] += random.randint(-10, 30)  # Random health impact
+        self.resources["money"] += random.randint(-50, 100)  # Random money flow
+
+    def play_turn(self):
+        self.display_status()
+        policy = input("Choose a policy (tax_increase, tax_decrease, subsidize_food, invest_health): ")
+        self.make_policy_decision(policy)
+        self.turns += 1
+
+def main():
+    game = Economy()
+    while True:
+        game.play_turn()
+        if game.resources["money"] <= 0:
+            print("You have run out of money! Game over.")
+            break
+
+if __name__ == "__main__":
+    main()
